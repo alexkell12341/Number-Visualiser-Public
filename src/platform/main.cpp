@@ -5,8 +5,20 @@
 #include <gameMain.h>
 #include <asserts.h>
 
+
+
+
 int main(void)
 {
+
+	extern int g_width;
+	g_width = 128;
+
+	extern int g_height;
+	g_height = 128;
+
+	extern bool hasChanged;
+	hasChanged = false;
 
 #if PRODUCTION_BUILD == 1
 	SetTraceLogLevel(LOG_NONE); //no log output to console by raylib
@@ -52,14 +64,18 @@ int main(void)
 
 #pragma region imgui windows
 
-		/*ImGui::Begin("Window Size");
+		ImGui::Begin("Window Size");
 
 
-		static int a = 128;
-		ImGui::SliderInt("Window Size", &a, 0, 500);
+		ImGui::SliderInt("Width", &g_width, 0, 500);
 
+		ImGui::SliderInt("height", &g_height, 0, 500);
 
-		ImGui::End();*/
+		if (ImGui::Button("Resize", { 256, 64 })) {
+			hasChanged = true;
+		}
+
+		ImGui::End();
 #pragma endregion
 
 		if (!updateGame()) {

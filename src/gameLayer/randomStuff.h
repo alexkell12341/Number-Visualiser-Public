@@ -10,4 +10,14 @@ int getRandomInt(std::ranlux24_base& rng, int min, int max);
 bool getRandomChance(std::ranlux24_base& rng, float chance);
 
 // Szudzik's Pairing Function
-int hash(int a, int b);
+int szudzikHash(int a, int b);
+
+//cantor pairing function
+int cantorHash(int a, int b);
+
+//Nary hash
+int nHash(int a, int b, int max);
+
+int internetHash(int a, int b);
+
+int combinedHash(int a, int b, int max);

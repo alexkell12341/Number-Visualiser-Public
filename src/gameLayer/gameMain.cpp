@@ -5,8 +5,11 @@
 #include <randomStuff.h>
 #include <gameMap.h>
 
-
 #include <raymath.h>
+
+int g_width;
+int g_height;
+bool hasChanged;
 
 struct VisualiserData
 {
@@ -16,13 +19,10 @@ struct VisualiserData
 
 }visData;
 
-
 bool initGame() {
 
-	int width = 128;
-	int height = 128;
 
-	visData.intMap.create(width, height);
+	visData.intMap.create(g_width, g_height);
 
 	visData.camera.target = { 0,0 }; //world-space centre of view, we will use this as the camera position
 	visData.camera.rotation = 0.0f;
@@ -39,6 +39,7 @@ bool updateGame() {
 
 	visData.camera.offset = { GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
 	
+#pragma region camera movement
 	//20 blocks per second
 	if (IsKeyDown(KEY_LEFT)) visData.camera.target.x -= 20.f * deltaTime;
 	if (IsKeyDown(KEY_RIGHT)) visData.camera.target.x += 20.f * deltaTime;
@@ -47,9 +48,11 @@ bool updateGame() {
 
 	if (IsKeyDown(KEY_W)) { visData.camera.zoom  += 20.f * deltaTime; }
 	if (IsKeyDown(KEY_S)) { visData.camera.zoom -= 20.f * deltaTime; }
+#pragma endregion
 
 	BeginMode2D(visData.camera);
 
+#pragma camera view region
 	Vector2 topLeftView = GetScreenToWorld2D({ 0, 0 }, visData.camera);
 	Vector2 bottomRightView = GetScreenToWorld2D({ (float)GetScreenWidth(), (float)GetScreenHeight() }, visData.camera);
 
@@ -65,16 +68,41 @@ bool updateGame() {
 
 	startYView = Clamp(startYView, 0, visData.intMap.h - 1);
 	endYView = Clamp(endYView, 0, visData.intMap.h - 1);
+#pragma endregion
 
 	for (int y = startYView; y < endYView; ++y) {
 		for (int x = startXView; x < endXView; ++x) {
 
 			auto& i = visData.intMap.getIntUnsafe(x, y);
 
-			std::ranlux24_base rng(hash(x, y));
+#pragma region random number generator
+
+			//RANDOM NUMBER GENERATOR GOES HERE
+
+			
+			//best so far
+
+			int maxVal = 0;
+
+			if (g_width > g_height) {
+				maxVal = g_width;
+			}
+			else {
+				maxVal = g_height;
+			}
+
+			
+			
+
+			/*std::ranlux24_base rng(combinedHash(x, y, maxVal));*/
+
+			std::ranlux24_base rng(szudzikHash(x, y));
 
 			i = getRandomInt(rng, 0, 1);
 
+#pragma endregion
+
+#pragma region number to screen
 			if (i == 0) {
 
 				DrawRectangle(x, y, 1, 1, BLACK);
@@ -83,9 +111,15 @@ bool updateGame() {
 				
 				DrawRectangle(x, y, 1, 1, WHITE);
 			}
+#pragma endregion
 		}
 	}
 	
+	if (hasChanged) {
+		visData.intMap.create(g_width, g_height);
+		hasChanged = false;
+	}
+
 	EndMode2D();
 
 	DrawFPS(10, 10);
