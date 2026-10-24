@@ -4,9 +4,8 @@
 #include <vector>
 #include <randomStuff.h>
 #include <gameMap.h>
-#include <assetManager.h>
-#include <helpers.h>
-#include <blocks.h>
+
+
 #include <raymath.h>
 
 struct VisualiserData
@@ -16,8 +15,6 @@ struct VisualiserData
 	Camera2D camera;
 
 }visData;
-
-AssetManager assetManager;
 
 
 bool initGame() {
@@ -79,28 +76,11 @@ bool updateGame() {
 			i = getRandomInt(rng, 0, 1);
 
 			if (i == 0) {
-				//DrawTexturePro(
-				//	assetManager.textures,
-				//	getTextureAtlas(Block::black, 0, 32, 32),
-				//	{ (float)x, (float)y, 1, 1 }, //destination (x position, y position, block width, block height)
-				//	{ 0,0 }, //origin
-				//	0.0f, //rotation
-				//	WHITE //tint
-
-				//);
 
 				DrawRectangle(x, y, 1, 1, BLACK);
 			}
 			else if (i = 1) {
-				//DrawTexturePro(
-				//	assetManager.textures,
-				//	getTextureAtlas(Block::white, 0, 32, 32),
-				//	{ (float)x, (float)y, 1, 1 }, //destination (x position, y position, block width, block height)
-				//	{ 0,0 }, //origin
-				//	0.0f, //rotation
-				//	WHITE //tint
-
-				//);
+				
 				DrawRectangle(x, y, 1, 1, WHITE);
 			}
 		}
